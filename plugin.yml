@@ -1,0 +1,4 @@
+name: EnchantmentPlus
+version: '1.0-SNAPSHOT'
+main: me.thane.enchantmentplus.EnchantmentPlus
+api-version: 1.19

@@ -1,0 +1,4 @@
+name: EnchantmentPlus
+version: '${version}'
+main: me.thane.enchantmentplus.EnchantmentPlus
+api-version: 1.19

@@ -1,0 +1,69 @@
+plugins {
+    id 'java'
+}
+
+group = 'me.thane'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+    maven {
+        name = 'spigotmc-repo'
+        url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
+    }
+    maven {
+        name = 'sonatype'
+        url = 'https://oss.sonatype.org/content/groups/public/'
+    }
+}
+
+dependencies {
+    //noinspection VulnerableLibrariesLocal
+    compileOnly 'org.spigotmc:spigot-api:1.19.3-R0.1-SNAPSHOT'
+    compileOnly project(':RconClient')
+}
+
+def targetJavaVersion = 17
+java {
+    def javaVersion = JavaVersion.toVersion(targetJavaVersion)
+    sourceCompatibility = javaVersion
+    targetCompatibility = javaVersion
+    if (JavaVersion.current() < javaVersion) {
+        toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
+        options.release = targetJavaVersion
+    }
+}
+
+processResources {
+    def props = [version: version]
+    inputs.properties props
+    filteringCharset 'UTF-8'
+    filesMatching('plugin.yml') {
+        expand props
+    }
+}
+
+tasks.register('copyJar') {
+    dependsOn build
+    copy {
+        from './build/libs/'
+        into './dev_server/plugins/'
+    }
+}
+
+tasks.named("build") { finalizedBy("copyJar") }
+
+tasks.register('reloadServer') {
+    dependsOn tasks.named("copyJar")
+    javaexec {
+        classpath = project(':RconClient').sourceSets.main.runtimeClasspath
+        main = 'Main'
+    }
+}
+
+tasks.named("copyJar") { finalizedBy("reloadServer") }
