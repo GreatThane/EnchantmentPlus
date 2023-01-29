@@ -23,7 +23,7 @@ atlassian-ide-plugin.xml
 *.ctxt
 
 # Package Files #
-#*.jar
+*.jar
 *.war
 *.nar
 *.ear
@@ -118,7 +118,7 @@ run/
 !gradle-wrapper.jar
 
 #MC Server
-#dev_server/
-#!dev_server/eula.txt
-#!dev_server/paper*.jar
-#!dev_server/server.properties
+dev_server/
+!dev_server/eula.txt
+!dev_server/paper*.jar
+!dev_server/server.properties
