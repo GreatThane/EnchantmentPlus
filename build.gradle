@@ -5,11 +5,12 @@ plugins {
 group = 'me.thane'
 version = '1.0-SNAPSHOT'
 
+
 repositories {
     mavenCentral()
     maven {
-        name = 'spigotmc-repo'
-        url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
+        name = 'papermc-repo'
+        url = 'https://repo.papermc.io/repository/maven-public/'
     }
     maven {
         name = 'sonatype'
@@ -19,7 +20,7 @@ repositories {
 
 dependencies {
     //noinspection VulnerableLibrariesLocal
-    compileOnly 'org.spigotmc:spigot-api:1.19.3-R0.1-SNAPSHOT'
+    compileOnly 'io.papermc.paper:paper-api:1.19.3-R0.1-SNAPSHOT'
     compileOnly project(':RconClient')
 }
 
@@ -48,22 +49,21 @@ processResources {
     }
 }
 
+//tasks.register('reloadServer') {
+//    doLast {
+//        javaexec {
+//            classpath = project(':RconClient').sourceSets.main.runtimeClasspath
+//            main = 'Main'
+//        }
+//    }
+//}
+
 tasks.register('copyJar') {
-    dependsOn build
+    //finalizedBy tasks.reloadServer
     copy {
         from './build/libs/'
         into './dev_server/plugins/'
     }
 }
 
-tasks.named("build") { finalizedBy("copyJar") }
-
-tasks.register('reloadServer') {
-    dependsOn tasks.named("copyJar")
-    javaexec {
-        classpath = project(':RconClient').sourceSets.main.runtimeClasspath
-        main = 'Main'
-    }
-}
-
-tasks.named("copyJar") { finalizedBy("reloadServer") }
+tasks.build { finalizedBy tasks.copyJar }
