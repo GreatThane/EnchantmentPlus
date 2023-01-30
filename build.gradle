@@ -3,7 +3,7 @@ plugins {
 }
 
 group = 'me.thane'
-version = '1.0'
+version = '1.0a'
 
 
 repositories {

@@ -134,8 +134,8 @@ public class UpgradeSelectScreen implements InventoryHolder {
                     cost -= item.getAmount();
                     screen.player.getInventory().setItem(slot, new ItemStack(Material.AIR));
                 } else {
-                    cost = 0;
                     item.setAmount(item.getAmount() - cost);
+                    cost = 0;
                     screen.player.getInventory().setItem(slot, item);
                 }
             }
